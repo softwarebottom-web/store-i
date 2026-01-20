@@ -1,0 +1,3 @@
+.border-rgb { border: 2px solid transparent; background: linear-gradient(var(--card), var(--card)) padding-box, linear-gradient(45deg, red, yellow, lime, cyan, blue, magenta, red) border-box; background-size: 200% auto; animation: rgb-flow 3s linear infinite; }
+@keyframes rgb-flow { 0% { background-position: 0% 50%; } 100% { background-position: 200% 50%; } }
+.watermark { position: absolute; top: 50%; left: 50%; transform: translate(-50%, -50%) rotate(-30deg); font-size: 60px; color: rgba(255, 0, 0, 0.1); font-weight: bold; border: 5px solid rgba(255, 0, 0, 0.1); padding: 5px; pointer-events: none; }
