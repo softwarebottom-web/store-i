@@ -1,0 +1,25 @@
+<!DOCTYPE html>
+<html lang="id">
+<head>
+    <link rel="stylesheet" href="css/global.css">
+    <link rel="stylesheet" href="css/components.css">
+    <link rel="stylesheet" href="css/effects.css">
+</head>
+<body>
+    <div class="container" style="padding:100px 8%; display:flex; gap:50px;">
+        <img id="pImg" class="border-rgb" style="width:450px; border-radius:15px;">
+        <div>
+            <h1 id="pName" class="gold-text" style="font-size:40px;"></h1>
+            <p id="pDesc" style="color:#ccc; line-height:1.6;"></p>
+            <h2 id="pPrice" style="font-size:32px;"></h2>
+            <div style="margin-top:30px;">
+                <button onclick="order('Website')" class="btn-gold">Beli di Website</button>
+                <button onclick="order('Discord')" class="btn-gold" style="background:#5865F2; color:#fff; margin-left:10px;">Beli via Discord</button>
+            </div>
+        </div>
+    </div>
+    <script>
+        // Ambil ID dari URL, tarik data Firestore, lalu jalankan fetch('/api/create-ticket')
+    </script>
+</body>
+</html>

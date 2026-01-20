@@ -1,0 +1,135 @@
+<!DOCTYPE html>
+<html lang="id">
+<head>
+    <meta charset="UTF-8">
+    <title>Seller Dashboard | ZStore</title>
+    <link rel="stylesheet" href="style.css">
+    <style>
+        body { background: #121212; color: #fff; font-family: sans-serif; display: flex; }
+        .sidebar { width: 250px; background: #1a1a1a; height: 100vh; padding: 20px; border-right: 1px solid #333; position: sticky; top: 0; }
+        .main-content { flex: 1; padding: 30px; }
+        .card { background: #1e1e1e; border-radius: 10px; padding: 20px; margin-bottom: 20px; border: 1px solid #333; }
+        table { width: 100%; border-collapse: collapse; margin-top: 10px; }
+        th { text-align: left; padding: 12px; background: #252525; color: #ffd700; }
+        td { padding: 12px; border-bottom: 1px solid #333; }
+        .btn-open { background: #27ae60; color: white; padding: 8px 15px; border: none; border-radius: 5px; cursor: pointer; }
+        .btn-closed { background: #c0392b; color: white; padding: 8px 15px; border: none; border-radius: 5px; cursor: pointer; }
+        
+        /* Tambahan CSS Foto */
+        .img-preview { width: 120px; height: 120px; object-fit: cover; display: none; margin-top: 10px; border: 1px solid #ffd700; }
+        input[type="file"] { margin-top: 10px; color: #888; }
+    </style>
+</head>
+<body>
+
+<div class="sidebar">
+    <h2 class="gold-text">ZStore Panel</h2>
+    <p>Seller: <span id="seller-name">Memuat...</span></p>
+    <div style="margin-bottom: 20px;">
+        <button id="statusBtn" class="btn-open" onclick="toggleSeller()">ONLINE</button>
+    </div>
+    <nav>
+        <p>📦 Produk Saya</p>
+        <p>🎫 Tiket Aktif</p>
+    </nav>
+</div>
+
+<div class="main-content">
+    <h1>Seller Management</h1>
+
+    <div class="card">
+        <h3>Post / Update Produk</h3>
+        <input type="text" id="pName" placeholder="Nama Jasa">
+        <input type="number" id="pPrice" placeholder="Harga">
+        
+        <p style="margin-bottom: 5px; font-size: 13px; color: #aaa;">Foto Produk:</p>
+        <input type="file" id="pFile" accept="image/*" onchange="previewImage(this)">
+        <img id="imgPreview" class="img-preview" src="">
+        <br><br>
+        
+        <button id="btnPost" onclick="addMyProduct()" class="btn-open">Tayangkan Barang</button>
+    </div>
+
+    <div class="card">
+        <h3>Tiket Pesanan (Khusus Anda)</h3>
+        <table>
+            <thead>
+                <tr>
+                    <th>Buyer</th>
+                    <th>Produk</th>
+                    <th>Aksi</th>
+                </tr>
+            </thead>
+            <tbody id="order-list"></tbody>
+        </table>
+    </div>
+</div>
+
+<script src="https://www.gstatic.com/firebasejs/9.x.x/firebase-app-compat.js"></script>
+<script src="https://www.gstatic.com/firebasejs/9.x.x/firebase-firestore-compat.js"></script>
+<script src="https://www.gstatic.com/firebasejs/9.x.x/firebase-storage-compat.js"></script>
+
+<script>
+    // Konfigurasi Firebase Anda
+    const firebaseConfig = { /* PASTE CONFIG ANDA */ };
+    firebase.initializeApp(firebaseConfig);
+    const db = firebase.firestore();
+    const storage = firebase.storage();
+
+    const sellerID = "ID_DISCORD_SELLER"; // Diambil dari Login
+
+    function previewImage(input) {
+        const preview = document.getElementById('imgPreview');
+        if (input.files && input.files[0]) {
+            preview.src = URL.createObjectURL(input.files[0]);
+            preview.style.display = 'block';
+        }
+    }
+
+    async function addMyProduct() {
+        const name = document.getElementById('pName').value;
+        const price = document.getElementById('pPrice').value;
+        const file = document.getElementById('pFile').files[0];
+        const btn = document.getElementById('btnPost');
+
+        if (!name || !price || !file) return alert("Lengkapi data dan foto!");
+
+        btn.disabled = true;
+        btn.innerText = "Mengupload...";
+
+        try {
+            // 1. Upload ke Storage
+            const storageRef = storage.ref(`products/${Date.now()}_${file.name}`);
+            await storageRef.put(file);
+            const imgURL = await storageRef.getDownloadURL();
+
+            // 2. Simpan ke Firestore
+            await db.collection("products").add({
+                name: name,
+                price: parseInt(price),
+                image: imgURL,
+                sellerId: sellerID,
+                brandName: "Brand Anda",
+                role: "seller",
+                stock: 99,
+                createdAt: new Date()
+            });
+
+            alert("Produk Berhasil Live!");
+            location.reload();
+        } catch (err) {
+            console.error(err);
+            alert("Gagal posting produk.");
+            btn.disabled = false;
+        }
+    }
+
+    // Fungsi Tiket (Tetap Sama)
+    async function clearTicket(tID) {
+        if(confirm("Selesaikan & Backup Chat ke Discord Owner?")) {
+            alert("Tiket diproses untuk penutupan.");
+        }
+    }
+</script>
+</body>
+</html>

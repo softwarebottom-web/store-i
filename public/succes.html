@@ -1,0 +1,38 @@
+<!DOCTYPE html>
+<html lang="id">
+<head>
+    <link rel="stylesheet" href="css/global.css">
+    <link rel="stylesheet" href="css/components.css">
+    <link rel="stylesheet" href="css/effects.css">
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/html2canvas/1.4.1/html2canvas.min.js"></script>
+</head>
+<body>
+    <div style="text-align:center; padding-top:100px;">
+        <h1 class="gold-text">TRANSAKSI BERHASIL!</h1>
+        <div id="receipt-box" class="receipt-box">
+            <div class="watermark">LUNAS</div>
+            <h3>ZSTORE RECEIPT</h3>
+            <hr>
+            <div style="text-align:left; font-size:14px;">
+                <p>Status: <b>PAID / VERIFIED</b></p>
+                <p>Produk: <span id="rName"></span></p>
+                <p>Total: <span id="rPrice"></span></p>
+            </div>
+            <hr>
+            <small>Terima kasih telah berbelanja.</small>
+        </div>
+        <button class="btn-gold" onclick="download()">📥 Download Struk</button>
+    </div>
+    <script>
+        // Ambil data order terakhir dari localStorage, lalu render ke struk
+        function download() {
+            html2canvas(document.querySelector("#receipt-box")).then(canvas => {
+                const a = document.createElement('a');
+                a.href = canvas.toDataURL();
+                a.download = 'Receipt-ZStore.png';
+                a.click();
+            });
+        }
+    </script>
+</body>
+</html>

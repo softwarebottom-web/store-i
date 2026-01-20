@@ -1,0 +1,50 @@
+<!DOCTYPE html>
+<html>
+<head>
+    <title>Owner Control | ZStore</title>
+    <link rel="stylesheet" href="style.css">
+    <style>
+        .sidebar { width: 250px; position: fixed; height: 100vh; background: #0a0a0a; border-right: 2px solid #ffd700; padding: 20px; }
+        .main { margin-left: 280px; padding: 30px; }
+    </style>
+</head>
+<body>
+    <div class="sidebar">
+        <h2 class="gold-text">ZSTORE OWNER</h2>
+        <button onclick="show('brand')">📦 My Brand Store</button>
+        <button onclick="show('sellers')">👥 Manage Sellers</button>
+        <button onclick="show('security')">🚫 Security & IP Ban</button>
+    </div>
+
+    <div class="main">
+        <div id="brand" class="panel-section">
+            <h2 class="gold-text">Post Produk Saya (ZStore Official)</h2>
+            <input type="text" id="pName" placeholder="Nama Produk">
+            <input type="number" id="pPrice" placeholder="Harga">
+            <textarea id="pDesc" placeholder="Deskripsi"></textarea>
+            <input type="file" id="pFile">
+            <button onclick="postOwner()" class="btn-gold">TAYANGKAN KE MARKETPLACE</button>
+        </div>
+
+        <div id="security" class="panel-section" style="display:none;">
+            <h2>🚫 Anti-Penipuan (Ban IP)</h2>
+            <input type="text" id="badIP" placeholder="Alamat IP Target">
+            <button onclick="banIP()" style="background:red;">BAN PERMANEN</button>
+            <button onclick="warnIP()" style="background:orange;">KASIH WARNING</button>
+        </div>
+    </div>
+
+    <script>
+        async function postOwner() {
+            // Logic upload foto ke Firebase Storage & Firestore 
+            // set role: 'owner' agar dapat efek RGB di index
+        }
+        
+        async function banIP() {
+            const ip = document.getElementById('badIP').value;
+            await db.collection("banned_ips").doc(ip).set({ bannedAt: new Date(), reason: "Fraud" });
+            alert("IP BANNED!");
+        }
+    </script>
+</body>
+</html>

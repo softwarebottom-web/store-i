@@ -1,0 +1,133 @@
+<!DOCTYPE html>
+<html lang="id">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Konfigurasi Pesanan | Asisten Toko</title>
+    <link rel="stylesheet" href="../css/style.css">
+    <style>
+        body { background: #0b0b0b; color: #eee; font-family: sans-serif; display: flex; justify-content: center; align-items: center; min-height: 100vh; margin: 0; }
+        
+        .form-container {
+            width: 90%;
+            max-width: 600px;
+            background: #1a1a1a;
+            padding: 30px;
+            border-radius: 15px;
+            border: 2px solid #ffd700; /* Border Gold */
+            box-shadow: 0 0 20px rgba(255, 215, 0, 0.2);
+        }
+
+        .asisten-chat {
+            background: #252525;
+            padding: 15px;
+            border-radius: 10px;
+            margin-bottom: 20px;
+            border-left: 5px solid #ffd700;
+        }
+
+        .input-group { margin-bottom: 20px; }
+        label { display: block; margin-bottom: 8px; color: #ffd700; font-weight: bold; }
+        
+        input, textarea, select {
+            width: 100%;
+            padding: 12px;
+            background: #333;
+            border: 1px solid #444;
+            color: white;
+            border-radius: 5px;
+            box-sizing: border-box;
+        }
+
+        .btn-submit {
+            width: 100%;
+            padding: 15px;
+            background: linear-gradient(45deg, #ffd700, #ffae00);
+            border: none;
+            color: black;
+            font-weight: bold;
+            cursor: pointer;
+            border-radius: 5px;
+            text-transform: uppercase;
+        }
+
+        .hidden { display: none; }
+    </style>
+</head>
+<body>
+
+<div class="form-container">
+    <div class="asisten-chat">
+        <p><strong>🤖 Asisten Toko:</strong> "Halo! Saya akan membantu merangkum pesananmu. Tolong lengkapi detail fitur di bawah ini agar Seller bisa langsung memprosesnya."</p>
+    </div>
+
+    <form id="orderForm">
+        <div class="input-group">
+            <label>Produk Terpilih</label>
+            <input type="text" id="productName" readonly style="background: #222; color: #888;">
+        </div>
+
+        <div id="feature-selection" class="input-group">
+            <label>Jumlah Fitur yang Diinginkan</label>
+            <select id="featureCount" onchange="toggleFeatureList()">
+                <option value="2">2 Fitur</option>
+                <option value="5">5 Fitur</option>
+                <option value="10">10 Fitur</option>
+                <option value="custom">Custom (Banyak)</option>
+            </select>
+        </div>
+
+        <div class="input-group">
+            <label id="detailLabel">Jelaskan List Fitur / Detail Desain:</label>
+            <textarea id="featureList" rows="5" placeholder="Contoh: Saya mau bot ada fitur Moderasi dan Music..."></textarea>
+        </div>
+
+        <div class="input-group">
+            <label>Metode Pembayaran</label>
+            <select id="paymentMethod">
+                <option value="QRIS">QRIS (Otomatis)</option>
+                <option value="GOPAY">GOPAY / OVO</option>
+                <option value="DANA">DANA</option>
+            </select>
+        </div>
+
+        <button type="button" class="btn-submit" onclick="submitToDiscord()">BUAT TIKET SEKARANG</button>
+    </form>
+</div>
+
+<script>
+    // Ambil data dari URL (Misal: form.html?product=Jasa%20Bot)
+    const urlParams = new URLSearchParams(window.location.search);
+    const product = urlParams.get('product') || "Produk Pilihan";
+    document.getElementById('productName').value = product;
+
+    // Logika pengiriman data
+    async function submitToDiscord() {
+        const data = {
+            product: document.getElementById('productName').value,
+            features: document.getElementById('featureList').value,
+            count: document.getElementById('featureCount').value,
+            payment: document.getElementById('paymentMethod').value,
+            buyerId: "ID_DARI_AUTH", // Diambil dari Firebase Auth
+            buyerName: "NAMA_DARI_AUTH"
+        };
+
+        // Kirim ke server.js kita tadi
+        const response = await fetch('/api/buy', {
+            method: 'POST',
+            headers: {'Content-Type': 'application/json'},
+            body: JSON.stringify(data)
+        });
+
+        const result = await response.json();
+        if(result.success) {
+            alert("Tiket berhasil dibuat! Silahkan cek Discord kamu.");
+            window.location.href = "index.html"; // Redirect balik
+        } else {
+            alert("Gagal: " + result.message);
+        }
+    }
+</script>
+
+</body>
+</html>
