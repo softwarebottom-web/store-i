@@ -1,0 +1,30 @@
+<!DOCTYPE html>
+<html lang="id">
+<head>
+    <meta charset="UTF-8">
+    <title>ZStore | Premium Marketplace</title>
+    <link rel="stylesheet" href="css/global.css">
+    <link rel="stylesheet" href="css/components.css">
+    <link rel="stylesheet" href="css/effects.css">
+</head>
+<body>
+    <nav>
+        <h2 class="gold-text">ZSTORE</h2>
+        <button class="btn-gold" onclick="location.href='panelowner.html'">Owner Panel</button>
+    </nav>
+    <header style="text-align:center; padding:60px 0;">
+        <h1 style="font-size:48px;">Temukan Jasa Digital <span class="gold-text">Terbaik</span></h1>
+        <p style="color:#888;">Aman, Cepat, dan Terverifikasi oleh ZStore Official.</p>
+    </header>
+    <div class="product-grid" id="market-grid"></div>
+
+    <script src="https://www.gstatic.com/firebasejs/9.x.x/firebase-app-compat.js"></script>
+    <script src="https://www.gstatic.com/firebasejs/9.x.x/firebase-firestore-compat.js"></script>
+    <script src="js/market.js"></script>
+    <script>
+        const firebaseConfig = { /* CONFIG KAMU */ };
+        firebase.initializeApp(firebaseConfig);
+        loadProducts(firebase.firestore());
+    </script>
+</body>
+</html>
